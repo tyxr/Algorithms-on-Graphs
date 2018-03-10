@@ -2,64 +2,19 @@
 
 import sys
 
-def is_negative(backup,adj,cost):
-    value = 0
-    #print(backup)
-    for i in range(len(backup)-1):
-        value = value + cost[backup[i]][adj[backup[i]].index(backup[i+1])]
-    return value
-
-
-
-def DFS(adj,i):
-    
-    global visited
-    global stack
-    global wrong
-    global backup
-    
-    visited[i]=1
-    if adj[i]!=None:
-        for j in adj[i]:
-            
-            if j in stack:
-                k = stack.index(j)
-                backup = stack[k:]
-                backup.append(j)
-                value = is_negative(backup,adj,cost)
-                if value<0:
-                    wrong=True
-            
-                return
-
-            if visited[j]==0:
-                stack.append(j)   
-                DFS(adj,j)
-    stack.remove(i)
 
 def negative_cycle(adj, cost):
-    global visited
-    global stack
-    global wrong
-    global backup
-    
-    wrong = False
-    visited = [0 for _ in range(len(adj))]
-
+    dist=[95535]*len(adj)
+    dist[0] = 0
     for i in range(len(adj)):
-        
-        stack = []
-        if (visited[i]==0):
-            stack.append(i)
-            DFS(adj,i)
-        
-        if wrong==True:
-            return 1
-        
+        for u in range(len(adj)):
+            for v in adj[u]:
+                v_index = adj[u].index(v)
+                if dist[v] > dist[u] + cost[u][v_index]:
+                    dist[v] = dist[u] + cost[u][v_index]
+                    if i == len(adj) - 1:
+                        return 1  '''低效的Bellman-Ford算法'''
     return 0
-
-
-
 
 if __name__ == '__main__':
     input = sys.stdin.read()
